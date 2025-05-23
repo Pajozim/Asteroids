@@ -1,9 +1,11 @@
 import pygame
+import time
 #from database import connect_database, database_version
 from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from shot import Firing
 
 
 def main():
@@ -20,17 +22,19 @@ def main():
   #groups
   g_updatable = pygame.sprite.Group()
   g_drawable = pygame.sprite.Group()
+  g_asteroids = pygame.sprite.Group()
+  g_shots = pygame.sprite.Group()
 
   Player.containers = (g_updatable, g_drawable)
 
   player = Player(x, y, PLAYER_RADIUS)
 
+  Firing.containers = (g_updatable, g_drawable)
+
   #--
-  AsteroidField.containers = (g_updatable,)
+  AsteroidField.containers = (g_updatable)
 
   asteroid_field = AsteroidField()
-
-  g_asteroids = pygame.sprite.Group()
 
   Asteroid.containers = (g_asteroids, g_updatable, g_drawable)
 
@@ -42,6 +46,12 @@ def main():
       py_object.update(dt)
     for py_object in g_drawable:
       py_object.draw(screen)  # Drawing each object in the group
+    for asteroid in g_asteroids:
+       if asteroid.collision(player):
+          print("Game Over!")
+          time.sleep(3)
+          return pygame.quit
+    
     pygame.display.flip()
 
     for event in pygame.event.get():

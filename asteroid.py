@@ -1,5 +1,4 @@
 import pygame
-from constants import screen
 from circleshape import CircleShape
 
 class Asteroid(CircleShape):
