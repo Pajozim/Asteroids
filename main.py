@@ -29,12 +29,12 @@ def main():
 
   player = Player(x, y, PLAYER_RADIUS)
 
-  Firing.containers = (g_updatable, g_drawable)
+  Firing.containers = (g_shots, g_updatable, g_drawable)
 
   #--
   AsteroidField.containers = (g_updatable)
 
-  asteroid_field = AsteroidField()
+  AsteroidField()
 
   Asteroid.containers = (g_asteroids, g_updatable, g_drawable)
 
@@ -47,10 +47,14 @@ def main():
     for py_object in g_drawable:
       py_object.draw(screen)  # Drawing each object in the group
     for asteroid in g_asteroids:
-       if asteroid.collision(player):
+      if asteroid.collision(player):
           print("Game Over!")
           time.sleep(3)
           return pygame.quit
+      for shot in g_shots:
+        if shot.collision(asteroid):
+            shot.kill()
+            asteroid.split()
     
     pygame.display.flip()
 
